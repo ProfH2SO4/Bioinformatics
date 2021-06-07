@@ -1,5 +1,4 @@
 """
-Subject: DSIB01 Introduction to Bioinformatics
 Task: Coding Dynamic Algorithm (Global Align)
 """
 
