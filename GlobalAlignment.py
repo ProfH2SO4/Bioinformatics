@@ -1,6 +1,5 @@
 """
 Subject: DSIB01 Introduction to Bioinformatics
-UNI_ID: 465356
 Task: Coding Dynamic Algorithm (Global Align)
 """
 
