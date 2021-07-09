@@ -36,7 +36,7 @@ class KmerArray:
         self.template_kmer_3 = [None for k in range(64)]
 
 
-def hash_it(hash_kmer, opt):  # collisions solved by using linear probing
+def hash_it(hash_kmer: int, opt):  # collisions solved by using linear probing
     lin_prob = 0
     pos = hash_kmer % 64
     while opt.count_array_3[pos][0] != 0 and opt.count_array_3[pos][0] != hash_kmer:
@@ -51,7 +51,7 @@ def hash_it(hash_kmer, opt):  # collisions solved by using linear probing
 
 
 # from seq makes specific number
-def hash_kmer_seq(seq_kmer):
+def hash_kmer_seq(seq_kmer: [str]) -> int:
     # distinct_num
     g = 31
     hashed_kmer = 0
@@ -61,14 +61,14 @@ def hash_kmer_seq(seq_kmer):
 
 
 # move seq -1 and del first element
-def move_del_seq(seq):
+def move_del_seq(seq) -> [str]:
     for i in range(len(seq) - 1):
         seq[i] = seq[i + 1]
     seq = seq[:-1]
     return seq
 
 
-def make_arr_empty(opt):
+def make_arr_empty(opt: int):
     if opt == first_data:
         opt = first_data
     if opt == second_data:
@@ -77,7 +77,7 @@ def make_arr_empty(opt):
     opt.count_array_3 = [(0, 0) for a in range(64)]
 
 
-def add_to_hash_ar(opt):
+def add_to_hash_ar(opt: int):
     if opt == first_data:  # if 1. file then ka if 2. ka2
         opt = first_data
     if opt == second_data:
@@ -87,7 +87,7 @@ def add_to_hash_ar(opt):
         opt.kmer_3 = move_del_seq(opt.kmer_3)
 
 
-def read_fasta(file, opt):
+def read_fasta(file: str, opt: int):
     if opt == 1:
         opt = first_data
     if opt == 2:
@@ -124,11 +124,11 @@ def file_header():
     data_file.close()
 
 
-def show_print(array):
+def show_print(array: [str]):
     print(array)
 
 
-def find_kmer(hash_seq, opt):
+def find_kmer(hash_seq: [str], opt: KmerArray) -> int:
     lin_prob = 0
     pos = hash_seq % 64
     while opt.count_array_3[pos][0] != 0 and opt.count_array_3[pos][0] != hash_seq:
@@ -140,7 +140,7 @@ def find_kmer(hash_seq, opt):
         return int(opt.count_array_3[pos][1])
 
 
-def w_to_file(count_nuc, opt):
+def w_to_file(count_nuc, opt: KmerArray):
     freq_val = [0 for i in range(64)]
     data_file = open("data.csv", 'a')
     for kmer_pos in range(len(first_data.template_kmer_3)):
