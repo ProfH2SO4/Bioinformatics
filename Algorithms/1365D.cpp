@@ -1,6 +1,11 @@
 #include <bits/stdc++.h>
 
 using namespace std;
+
+/*
+ * Date: 16.7.2021
+ * problem can be found at https://codeforces.com/problemset/problem/1365/D
+ */
 #define N 51
 int direction[4][2] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
 
