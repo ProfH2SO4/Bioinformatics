@@ -24,7 +24,9 @@ int get_height(rb_node *node){
     return right + 1;
 
 }
-void printBT(const std::string& prefix, const rb_node* node, bool isLeft)
+// this function modified from
+// https://stackoverflow.com/questions/36802354/print-binary-tree-in-a-pretty-way-using-c
+void print_rb_tree(const string& prefix, const rb_node* node, bool isLeft)
 {
     if( node != nullptr )
     {
@@ -33,47 +35,14 @@ void printBT(const std::string& prefix, const rb_node* node, bool isLeft)
         std::cout << (isLeft ? "├──" : "└──" );
 
         // print the value of the node
-        std::cout << node->value << std::endl;
+        std::cout << node->value << '.' << node->color << std::endl;
 
         // enter the next tree level - left and right branch
-        printBT( prefix + (isLeft ? "│   " : "    "), node->left_child, true);
-        printBT( prefix + (isLeft ? "│   " : "    "), node->right_child, false);
+        print_rb_tree(prefix + (isLeft ? "│   " : "    "), node->left_child, true);
+        print_rb_tree(prefix + (isLeft ? "│   " : "    "), node->right_child, false);
     }
 }
 
-void print_tree(rb_node node, int height){
-    queue<rb_node> q;
-    q.push(node);
-    int floor_nodes = 1;
-    int next_floor_nodes  = 0;
-    cout << string("\t") * height;
-    while(!q.empty()){
-        rb_node cur_node = q.front();
-        q.pop();
-        if(floor_nodes != 0){
-            if(cur_node.left_child != NULL){
-                next_floor_nodes++;
-                q.push(*cur_node.left_child);
-            }
-            if(cur_node.right_child != NULL){
-                next_floor_nodes++;
-                q.push(*cur_node.right_child);
-            }
-
-        }
-        cout << string("\t") * height <<cur_node.value << '.' << cur_node.color << string("\t") * height;
-        floor_nodes--;
-        if(floor_nodes == 0){
-            height -1;
-            cout << endl;
-            floor_nodes = next_floor_nodes;
-            next_floor_nodes = 0;
-        }
-
-
-    }
-
-}
 void init_node(rb_node *node, int value){
     node->color = 1;
     node->parent = NULL;
@@ -270,11 +239,11 @@ void fix(tree* rb_tree, rb_node* node){
         }
     }
     //case 1: uncle is red
-    if(grand_parent->right_child != NULL && grand_parent->right_child->color == 1
-    && grand_parent->value <= grand_parent->right_child->value && node->value < grand_parent->value){ // right uncle
+    if(grand_parent->right_child != NULL && grand_parent->right_child->color == 1 && node->parent->color == 1 &&
+     grand_parent->value <= grand_parent->right_child->value && node->value < grand_parent->value){ // right uncle
         fix_case_one(rb_tree, node, true);
     }
-    if(grand_parent->left_child != NULL && grand_parent->left_child->color == 1 &&
+    if(grand_parent->left_child != NULL && grand_parent->left_child->color == 1 && node->parent->color == 1 &&
     grand_parent->value > grand_parent->left_child->value && node->value >= grand_parent->value){ // left uncle
         fix_case_one(rb_tree, node, false);
 
@@ -321,7 +290,6 @@ int main(){
     insert_node(&rb_tree1, 5);
     insert_node(&rb_tree1, 1);
     int height = get_height(rb_tree1.root);
-    print_tree(*rb_tree1.root, height);
     cout<< "...................................." << endl;
     test1(&rb_tree1);
     cout<< "...................................." << endl;
@@ -338,7 +306,7 @@ int main(){
     cout<< "Testing Right line root, left line, right rotation" << endl;
     cout<< "...................................." << endl;
     height = get_height(rb_tree1.root);
-    printBT("", rb_tree1.root, false);
+    print_rb_tree("", rb_tree1.root, false);
     //print_tree(*rb_tree1.root, height);
     test_whole_tree(&rb_tree1, rb_tree1.root);
     cout<< "...................................." << endl;
@@ -353,9 +321,20 @@ int main(){
     test1(&rb_tree2);
     cout<< "...................................." << endl;
     insert_node(&rb_tree2, 9);
+    insert_node(&rb_tree2, 30);
+    insert_node(&rb_tree2, 35);
+    insert_node(&rb_tree2, 14);
+    insert_node(&rb_tree2, 17);
+    print_rb_tree("",rb_tree2.root, false);
+    insert_node(&rb_tree2, 33);
+    insert_node(&rb_tree2, 45);
+    print_rb_tree("",rb_tree2.root, false);
+    insert_node(&rb_tree2, 8);
+    insert_node(&rb_tree2, 7);
+    insert_node(&rb_tree2, 6);
     test_colors(rb_tree2.root);
     cout<< "...................................." << endl;
-
+    print_rb_tree("",rb_tree2.root, false);
 
 
     return 0;
