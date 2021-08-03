@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 
 #include "tests.h"
+#include "deletion.h"
 using namespace std;
 
 string operator*(const std::string& s, size_t n) {
@@ -52,7 +53,7 @@ void init_node(rb_node *node, int value){
 
 }
 
-rb_node* find_node(tree* rb_tree, int value){
+rb_node* find_node_to_connect(tree* rb_tree, int value){
     assert(rb_tree != NULL);
     rb_node *temp = rb_tree->root;
 
@@ -158,8 +159,6 @@ void fix_triangle(tree* rb_tree, rb_node* node, bool rotation_right){
         node->parent = grand_parent;
         grand_parent->left_child = node;
     }
-
-
 }
 
 void fix_case_one(tree* rb_tree, rb_node* node, bool right){
@@ -270,7 +269,7 @@ void insert_node(tree* rb_tree, int value){
         return;
     }
 
-    rb_node *last_node = find_node(rb_tree, value);
+    rb_node *last_node = find_node_to_connect(rb_tree, value);
     if(last_node->value <= value){ // right child, equal or higher
         last_node->right_child = node;
     }
@@ -282,7 +281,8 @@ void insert_node(tree* rb_tree, int value){
     fix(rb_tree, rb_tree->root);
 }
 
-int main(){
+int main(int argc,char **argv){
+    run_tests(argc, argv);
     tree rb_tree1;
     rb_tree1.root = NULL;
     cout << "Testing 3 nodes, left line" << endl;
@@ -290,15 +290,11 @@ int main(){
     insert_node(&rb_tree1, 5);
     insert_node(&rb_tree1, 1);
     int height = get_height(rb_tree1.root);
-    cout<< "...................................." << endl;
-    test1(&rb_tree1);
-    cout<< "...................................." << endl;
+
     insert_node(&rb_tree1, 20);
     insert_node(&rb_tree1, 14);
     insert_node(&rb_tree1, 12);
-    cout << "Testing colors" << endl;
-    test_colors(rb_tree1.root);
-    cout<< "...................................." << endl;
+
 
     insert_node(&rb_tree1, 25);
     insert_node(&rb_tree1, 11);
@@ -308,7 +304,7 @@ int main(){
     height = get_height(rb_tree1.root);
     print_rb_tree("", rb_tree1.root, false);
     //print_tree(*rb_tree1.root, height);
-    test_whole_tree(&rb_tree1, rb_tree1.root);
+
     cout<< "...................................." << endl;
     cout << "All test of first tree finished" << endl;
     tree rb_tree2;
@@ -318,24 +314,31 @@ int main(){
     insert_node(&rb_tree2, 20);
     insert_node(&rb_tree2, 25);
     cout<< "...................................." << endl;
-    test1(&rb_tree2);
+
     cout<< "...................................." << endl;
     insert_node(&rb_tree2, 9);
     insert_node(&rb_tree2, 30);
     insert_node(&rb_tree2, 35);
     insert_node(&rb_tree2, 14);
     insert_node(&rb_tree2, 17);
-    print_rb_tree("",rb_tree2.root, false);
     insert_node(&rb_tree2, 33);
     insert_node(&rb_tree2, 45);
-    print_rb_tree("",rb_tree2.root, false);
     insert_node(&rb_tree2, 8);
     insert_node(&rb_tree2, 7);
     insert_node(&rb_tree2, 6);
-    test_colors(rb_tree2.root);
+
+    cout<< "...................................." << endl;
+    //print_rb_tree("",rb_tree2.root, false);
+    //main_deletion_switcher(&rb_tree2, 35);
+    cout<< "...................................." << endl;
+    print_rb_tree("",rb_tree1.root, false);
+    //main_deletion_switcher(&rb_tree1, 15); // ex 5
+    // main_deletion_switcher(&rb_tree1, 12); // ex 7
     cout<< "...................................." << endl;
     print_rb_tree("",rb_tree2.root, false);
 
+    main_deletion_switcher(&rb_tree2, 25);
+    print_rb_tree("",rb_tree2.root, false);
 
     return 0;
 }
