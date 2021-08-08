@@ -15,7 +15,9 @@ typedef struct tree{
     rb_node *root;
 } tree;
 
-rb_node* find_node(tree* rb_tree, int value);
+void print_rb_tree(const std::string& prefix, const rb_node* node, bool isLeft);
+void init_node(rb_node *node, int value);
+rb_node* find_node_to_connect(tree* rb_tree, int value);
 void fix(tree* rb_tree, rb_node *node);
 void insert_node(tree* rb_tree, int value);
 

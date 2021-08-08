@@ -131,7 +131,6 @@ void fix_case_two(tree* rb_tree, rb_node* double_black, rb_node* r_parent, rb_no
 
 }
 
-
 void fix_case_three(rb_node* double_black, rb_node* r_parent, rb_node* s, bool side){
     s->color = 1;
     if(double_black->left_child == nullptr && double_black->right_child == nullptr) {
@@ -142,11 +141,6 @@ void fix_case_three(rb_node* double_black, rb_node* r_parent, rb_node* s, bool s
             r_parent->right_child = double_black->right_child;
         }
     }
-    //double_black->parent->color = 22; // double black
-//    if(double_black->right_child != nullptr) {
-//        double_black->right_child->parent = r_parent;
-//    }
-    //free(double_black);
 }
 
 // s => double_black parent other child, side true => double_black as right child
@@ -175,8 +169,6 @@ void fix_case_four(rb_node* double_black, rb_node* r_parent, rb_node* s, bool si
         }
         double_black->right_child->parent = r_parent;
     }
-
-    //free(double_black);
 }
 
 void fix_case_five(tree* rb_tree, rb_node* replacement, rb_node* r_parent, rb_node* s, bool side){
@@ -187,15 +179,15 @@ void fix_case_five(tree* rb_tree, rb_node* replacement, rb_node* r_parent, rb_no
     }
     else{
         s->right_child->color = 2;
-        //left_rotation(s->right_child, s, s->left_child);
         left_rotation(rb_tree, s->left_child, s, s->right_child);
 
     }
 }
 
 void fix_case_six(tree* rb_tree, rb_node* double_black, rb_node* r_parent, rb_node* s, bool side){
+    int temp = s->color;
     s->color = r_parent->color;
-    r_parent->color = 2;
+    r_parent->color = temp;
     if(!side){
         s->right_child->color = 2;
         left_rotation(rb_tree, double_black, r_parent, s);
@@ -211,10 +203,9 @@ void fix_case_six(tree* rb_tree, rb_node* double_black, rb_node* r_parent, rb_no
             r_parent->right_child = nullptr;
         }
     }
-    //free(double_black);
 }
-
-bool is_second_case(rb_node* double_black, rb_node* r_parent, rb_node* s, bool side){
+// initialize s children
+pair<rb_node*, rb_node*> initialize_x_y(rb_node* s, bool side){
     rb_node* x = nullptr;
     rb_node* y = nullptr;
     if(!side) {
@@ -226,26 +217,28 @@ bool is_second_case(rb_node* double_black, rb_node* r_parent, rb_node* s, bool s
         y = s->left_child;
     }
 
+    return make_pair(x, y);
+
+}
+//if side false double black on left
+bool is_second_case(rb_node* double_black, rb_node* r_parent, rb_node* s, bool side){
+    //s on right side then x = left child, y = right child
+    //mirror image x = right child, y = left child
+    pair<rb_node*, rb_node*> s_child = initialize_x_y(s, side);
+
     if(double_black->color == 2 && r_parent->color == 2 && s->color == 1
-    && x->color == 2 && y->color == 2){
+       && s_child.first->color == 2 && s_child.second->color == 2){
         return true;
     }
     return false;
 }
+
 bool is_third_case(rb_node* double_black, rb_node* r_parent, rb_node* s, bool side){
-    rb_node* x = nullptr;
-    rb_node* y = nullptr;
-    if(!side) {
-        x = s->left_child;
-        y = s->right_child;
-    }
-    else{
-        x = s->right_child;
-        y = s->left_child;
-    }
+    pair<rb_node*, rb_node*> s_child = initialize_x_y(s, side);
+
     if(double_black->color == 2 && r_parent->color == 2 && s->color == 2
-       && (x == nullptr || x->color == 2)
-       && (y == nullptr || y->color == 2)){
+       && (s_child.first == nullptr || s_child.first->color == 2)
+       && (s_child.second == nullptr || s_child.second->color == 2)){
         return true;
     }
 
@@ -254,39 +247,21 @@ bool is_third_case(rb_node* double_black, rb_node* r_parent, rb_node* s, bool si
 
 bool is_fourth_case(rb_node* replacement, rb_node* r_parent, rb_node* s, bool side){
     if(replacement->color == 2 && replacement->parent->color == 1) {
-        rb_node* x = nullptr;
-        rb_node* y = nullptr;
-        if(!side) {
-            x = s->left_child;
-            y = s->right_child;
-        }
-        else{
-            x = s->right_child;
-            y = s->left_child;
-        }
-        if (s->color == 2 && (x == nullptr || x->color == 2)
-            && (y == nullptr || y->color == 2)) {
+        pair<rb_node*, rb_node*> s_child = initialize_x_y(s, side);
+        if (s->color == 2 && (s_child.first == nullptr || s_child.first->color == 2)
+            && (s_child.second == nullptr || s_child.second->color == 2)) {
             return true;
         }
     }
     return false;
 }
 
-//if side false replacement on left
+//if side false double black on left
 bool is_five_case(rb_node* replacement, rb_node* r_parent, rb_node* s, bool side){
-    rb_node* x = nullptr;
-    rb_node* y = nullptr;
-    if(!side) {
-        x = s->left_child;
-        y = s->right_child;
-    }
-    else{
-            x = s->right_child;
-            y = s->left_child;
-        }
+    pair<rb_node*, rb_node*> s_child = initialize_x_y(s, side);
     if (replacement->color == 2 && s != nullptr
-        && s->color == 2 && x != nullptr && x->color == 1
-        && (y == nullptr || y->color == 2)) {
+        && s->color == 2 && s_child.first != nullptr && s_child.first->color == 1
+        && (s_child.second == nullptr || s_child.second->color == 2)) {
         return true;
     }
     return false;
@@ -302,8 +277,7 @@ void main_deletion_switcher(tree* rb_tree, int value_to_find) {
         cout << " Value not in tree!" << endl;
         return;
     }
-    rb_node* in_ord_suc = nullptr;
-    in_ord_suc = find_smallest_node(node_to_replace->right_child); // find in_ord_suc
+    rb_node* in_ord_suc = find_smallest_node(node_to_replace->right_child); // find in_ord_suc
     // node to replace  has no post order successor
     if(in_ord_suc == nullptr) { in_ord_suc = node_to_replace;}
     node_to_replace->value = in_ord_suc->value;
@@ -332,22 +306,21 @@ void main_deletion_switcher(tree* rb_tree, int value_to_find) {
         return;
     }
     // node_to_replace left child is red and left child has both children null
-    else if(node_to_replace->right_child == nullptr && node_to_replace->left_child != nullptr
+    else if(node_to_replace->right_child == nullptr
+    && node_to_replace->left_child != nullptr
     && node_to_replace->left_child->color == 1
-    && node_to_replace->left_child->left_child == nullptr && node_to_replace->left_child->right_child == nullptr){
+    && node_to_replace->left_child->left_child == nullptr
+    && node_to_replace->left_child->right_child == nullptr){
         node_to_replace->value = node_to_replace->left_child->value;
         free(node_to_replace->left_child);
         node_to_replace->left_child = nullptr;
         return;
     }
 
-    rb_node* r_parent = in_ord_suc->parent;
     rb_node* double_black = in_ord_suc;
-    //double_black->color = 22; // double black
 
-    //bool r_left = is_left_child(double_black->parent->value, double_black->value);
-    while(true) {
-        r_parent = double_black->parent;
+    for(auto i =0; i<3;++i) {
+        rb_node* r_parent = double_black->parent;
         rb_node *y = nullptr;
         rb_node *s = nullptr;
         // false: double_black is on right side, true: left side
@@ -379,14 +352,13 @@ void main_deletion_switcher(tree* rb_tree, int value_to_find) {
             free(in_ord_suc);
             return;
         }
-
         // 5 case
         if (is_five_case(double_black, double_black->parent, s, !r_left)) {
             fix_case_five(rb_tree, double_black, double_black->parent, s, !r_left);
         }
         // 6 case
-        if (double_black->color == 2 && s != nullptr && s->color == 2 &&
-            y != nullptr && y->color == 1) {
+        if (double_black->color == 2 && s != nullptr && s->color == 2
+        && y != nullptr && y->color == 1) {
             fix_case_six(rb_tree ,double_black, r_parent, s, !r_left);
             free(in_ord_suc);
             return;

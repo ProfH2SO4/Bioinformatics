@@ -7,5 +7,6 @@
 
 #include "red_black_tree.h"
 
+void delete_tree(rb_node *root);
 void main_deletion_switcher(tree* rb_tree, int value_to_find);
 #endif //UNTITLED_DELETION_H
