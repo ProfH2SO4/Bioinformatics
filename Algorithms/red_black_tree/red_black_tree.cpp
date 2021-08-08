@@ -225,25 +225,26 @@ void fix(tree* rb_tree, rb_node* node){
                 (grand_parent->left_child == NULL || grand_parent->left_child->color == 2)){
             fix_line(rb_tree, node, false);
         }
-        // case 3 triangle: only rotate
+        // case 2 triangle: only rotate
         if(node->value < node->parent->value && node->parent->value >= grand_parent->value &&  // rotate right triangle
              (grand_parent->left_child == NULL || grand_parent->left_child->color == 2)){
             fix_triangle(rb_tree,node, true);
             return;
         }
 
-        if(node->value >= node->parent->value && node->parent->value < grand_parent->value &&  // rotate right triangle
+        if(node->value >= node->parent->value && node->parent->value < grand_parent->value &&  // rotate left triangle
            (grand_parent->right_child == NULL || grand_parent->right_child->color == 2)){
             fix_triangle(rb_tree,node, false);
         }
     }
     //case 1: uncle is red
-    if(grand_parent->right_child != NULL && grand_parent->right_child->color == 1 && node->parent->color == 1 &&
-     grand_parent->value <= grand_parent->right_child->value && node->value < grand_parent->value){ // right uncle
+    if(grand_parent->right_child != NULL && grand_parent->right_child->color == 1 && node->parent->color == 1
+      && node->color == 1 && grand_parent->value <= grand_parent->right_child->value && node->value < grand_parent->value){ // right uncle
         fix_case_one(rb_tree, node, true);
     }
-    if(grand_parent->left_child != NULL && grand_parent->left_child->color == 1 && node->parent->color == 1 &&
-    grand_parent->value > grand_parent->left_child->value && node->value >= grand_parent->value){ // left uncle
+
+    if(grand_parent->left_child != NULL && grand_parent->left_child->color == 1 && node->parent->color == 1
+    && node->color == 1 && grand_parent->value > grand_parent->left_child->value && node->value >= grand_parent->value){ // left uncle
         fix_case_one(rb_tree, node, false);
 
     }
@@ -282,63 +283,96 @@ void insert_node(tree* rb_tree, int value){
 }
 
 int main(int argc,char **argv){
-    run_tests(argc, argv);
-    tree rb_tree1;
-    rb_tree1.root = NULL;
-    cout << "Testing 3 nodes, left line" << endl;
-    insert_node(&rb_tree1, 15);
-    insert_node(&rb_tree1, 5);
-    insert_node(&rb_tree1, 1);
-    int height = get_height(rb_tree1.root);
-
-    insert_node(&rb_tree1, 20);
-    insert_node(&rb_tree1, 14);
-    insert_node(&rb_tree1, 12);
-
-
-    insert_node(&rb_tree1, 25);
-    insert_node(&rb_tree1, 11);
-    insert_node(&rb_tree1, 10);
-    cout<< "Testing Right line root, left line, right rotation" << endl;
-    cout<< "...................................." << endl;
-    height = get_height(rb_tree1.root);
-    print_rb_tree("", rb_tree1.root, false);
-    //print_tree(*rb_tree1.root, height);
+    //run_tests(argc, argv);
+    tree tree2;
+    tree2.root = NULL;
+    tree2.root = nullptr;
+    insert_node(&tree2, 40);
+    insert_node(&tree2, 50);
+    insert_node(&tree2, 60);
+    insert_node(&tree2, 70);
+    insert_node(&tree2, 80);
+    insert_node(&tree2, 90);
+    insert_node(&tree2, 30);
+    insert_node(&tree2, 45);
+    print_rb_tree("", tree2.root, false);
+    insert_node(&tree2, 20);
+    print_rb_tree("", tree2.root, false);
+    insert_node(&tree2, 15);
+    insert_node(&tree2, 16);
+    insert_node(&tree2, 17);
+    insert_node(&tree2, 18);
+    insert_node(&tree2, 33);
 
     cout<< "...................................." << endl;
-    cout << "All test of first tree finished" << endl;
-    tree rb_tree2;
-    rb_tree2.root = NULL;
-    cout << "Testing 3 nodes, right line" << endl;
-    insert_node(&rb_tree2, 15);
-    insert_node(&rb_tree2, 20);
-    insert_node(&rb_tree2, 25);
-    cout<< "...................................." << endl;
-
-    cout<< "...................................." << endl;
-    insert_node(&rb_tree2, 9);
-    insert_node(&rb_tree2, 30);
-    insert_node(&rb_tree2, 35);
-    insert_node(&rb_tree2, 14);
-    insert_node(&rb_tree2, 17);
-    insert_node(&rb_tree2, 33);
-    insert_node(&rb_tree2, 45);
-    insert_node(&rb_tree2, 8);
-    insert_node(&rb_tree2, 7);
-    insert_node(&rb_tree2, 6);
-
-    cout<< "...................................." << endl;
-    //print_rb_tree("",rb_tree2.root, false);
-    //main_deletion_switcher(&rb_tree2, 35);
-    cout<< "...................................." << endl;
-    print_rb_tree("",rb_tree1.root, false);
-    //main_deletion_switcher(&rb_tree1, 15); // ex 5
-    // main_deletion_switcher(&rb_tree1, 12); // ex 7
-    cout<< "...................................." << endl;
-    print_rb_tree("",rb_tree2.root, false);
-
-    main_deletion_switcher(&rb_tree2, 25);
-    print_rb_tree("",rb_tree2.root, false);
-
+//    tree rb_tree2;
+//    rb_tree2.root = NULL;
+//
+//    insert_node(&rb_tree2, 15);
+//    insert_node(&rb_tree2, 20);
+//    insert_node(&rb_tree2, 25);
+//
+//
+//    insert_node(&rb_tree2, 9);
+//    insert_node(&rb_tree2, 30);
+//    insert_node(&rb_tree2, 35);
+//    insert_node(&rb_tree2, 14);
+//    insert_node(&rb_tree2, 17);
+//    insert_node(&rb_tree2, 33);
+//    insert_node(&rb_tree2, 45);
+//    insert_node(&rb_tree2, 8);
+//    insert_node(&rb_tree2, 7);
+//    insert_node(&rb_tree2, 6);
+//
+//
+//
+//    cout<< "...................................." << endl;
+//    print_rb_tree("",rb_tree2.root, false);
+//
+//    main_deletion_switcher(&rb_tree2, 25);
+//    cout << "25" << endl;
+//    print_rb_tree("",rb_tree2.root, false);
+//    main_deletion_switcher(&rb_tree2, 45);
+//    cout << "45" << endl;
+//    print_rb_tree("",rb_tree2.root, false);
+//    main_deletion_switcher(&rb_tree2, 30);
+//    cout << "30 was deleted" << endl;
+//    print_rb_tree("",rb_tree2.root, false);
+//    main_deletion_switcher(&rb_tree2, 9);
+//    cout << "9 was deleted" << endl;
+//    print_rb_tree("",rb_tree2.root, false);
+//
+//    main_deletion_switcher(&rb_tree2, 8);
+//    cout << "8 was deleted" << endl;
+//    print_rb_tree("",rb_tree2.root, false);
+//
+//    main_deletion_switcher(&rb_tree2, 7);
+//    cout << "7 was deleted" << endl;
+//    print_rb_tree("",rb_tree2.root, false);
+//
+//    main_deletion_switcher(&rb_tree2, 6); // case 2
+//    cout << "6 was deleted" << endl;
+//    print_rb_tree("",rb_tree2.root, false);
+//    /////////////////////////////////////////////////////////////
+//
+//    main_deletion_switcher(&rb_tree2, 20); // case 2
+//    cout << "20 was deleted" << endl;
+//    print_rb_tree("",rb_tree2.root, false);
+//
+//    main_deletion_switcher(&rb_tree2, 33); //case 2
+//    cout << "33 was deleted" << endl;
+//    print_rb_tree("",rb_tree2.root, false);
+//
+//    main_deletion_switcher(&rb_tree2, 15);
+//    print_rb_tree("",rb_tree2.root, false);
+//
+//    main_deletion_switcher(&rb_tree2, 14);
+//    print_rb_tree("",rb_tree2.root, false);
+//
+//    main_deletion_switcher(&rb_tree2, 35);
+//    print_rb_tree("",rb_tree2.root, false);
+//
+//    main_deletion_switcher(&rb_tree2, 17);
+//    print_rb_tree("",rb_tree2.root, false);
     return 0;
 }
