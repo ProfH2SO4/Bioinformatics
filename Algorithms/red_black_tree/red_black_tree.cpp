@@ -282,6 +282,7 @@ void insert_node(tree* rb_tree, int value){
 }
 
 int main(int argc,char **argv){
+    //uncomment if you want to run tests
     //run_tests(argc, argv);
 
 
